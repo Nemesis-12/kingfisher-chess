@@ -18,13 +18,5 @@ def clear_piece(bitboard, square):
 def toggle_piece(bitboard, square):
     return bitboard ^ (1 << square)
 
-bitboard = 0
-bitboard = set_piece(bitboard, 3)
-bitboard = set_piece(bitboard, 32)
-show_bitboard(bitboard)
-
-bitboard = clear_piece(bitboard, 3)
-show_bitboard(bitboard)
-
-bitboard = toggle_piece(bitboard, 10)
-show_bitboard(bitboard)
+def is_occupied(bitboard, square):
+    return (bitboard >> square) & 1
