@@ -23,14 +23,14 @@ RANK_6 = RANK_5 << 8
 RANK_7 = RANK_6 << 8
 RANK_8 = RANK_7 << 8
 
-FILE_1 = 0x0101010101010101
-FILE_2 = FILE_1 << 1
-FILE_3 = FILE_2 << 2
-FILE_4 = FILE_3 << 3
-FILE_5 = FILE_4 << 4
-FILE_6 = FILE_5 << 5
-FILE_7 = FILE_6 << 6
-FILE_8 = FILE_7 << 7
+FILE_A = 0x0101010101010101
+FILE_B = FILE_A << 1
+FILE_C = FILE_B << 2
+FILE_D = FILE_C << 3
+FILE_E = FILE_D << 4
+FILE_F = FILE_E << 5
+FILE_G = FILE_F << 6
+FILE_H = FILE_G << 7
 
 # Print a bitboard
 def show_bitboard(bitboard):
