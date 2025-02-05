@@ -115,6 +115,36 @@ def mirror_horizontal(bitboard):
 
     return bitboard
 
+# Flip board along A1-H8 diagonal
+def flip_diagonal(bitboard):
+    k1 = 0x5500550055005500
+    k2 = 0x3333000033330000
+    k4 = 0x0f0f0f0f00000000
+
+    t = k4 & (bitboard ^ (bitboard << 28))
+    bitboard ^= t ^ (t >> 28)
+    t = k2 & (bitboard ^ (bitboard << 14))
+    bitboard ^= t ^ (t >> 14)
+    t = k1 & (bitboard ^ (bitboard << 7))
+    bitboard ^= t ^ (t >> 7)
+
+    return bitboard
+
+# Flip board along A8-H1 diagonal
+def flip_anti_diagonal(bitboard):
+    k1 = 0xaa00aa00aa00aa00
+    k2 = 0xcccc0000cccc0000
+    k4 = 0xf0f0f0f00f0f0f0f
+
+    t = bitboard ^ (bitboard << 36)
+    bitboard ^= k4 & (t ^ (bitboard >> 36))
+    t = k2 & (bitboard ^ (bitboard << 18))
+    bitboard ^= t ^ (t >> 18)
+    t = k1 & (bitboard ^ (bitboard << 9))
+    bitboard ^= t ^ (t >> 9)
+
+    return bitboard
+
 # Functions for moving one step in any direction
 def north(bitboard):
     return bitboard << 8
