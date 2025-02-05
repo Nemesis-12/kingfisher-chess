@@ -14,7 +14,7 @@ BLACK_QUEEN   = (1 << 59)
 BLACK_KING    = (1 << 60)
 
 # Define rank and files for chessboard
-RANK_1 = RANK_1 = 0x00000000000000FF
+RANK_1 = 0x00000000000000FF
 RANK_2 = RANK_1 << 8
 RANK_3 = RANK_2 << 8
 RANK_4 = RANK_3 << 8
@@ -90,11 +90,7 @@ def get_MSB(bitboard):
 
 # Define population count (check no of pieces)
 def popcount(bitboard):
-    count = 0
-    while bitboard:
-        bitboard &= bitboard - 1
-        count += 1
-    return count
+    return bin(bitboard).count("1")
 
 # Flip board vertically
 def flip_vertical(bitboard):
@@ -143,3 +139,7 @@ def east(bitboard):
 
 def west(bitboard):
     return (bitboard >> 1) & ~FILE_H
+
+bitboard = WHITE_PAWNS
+show_bitboard(bitboard)
+print(popcount(bitboard))
