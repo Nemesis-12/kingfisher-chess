@@ -32,6 +32,8 @@ FILE_F = FILE_E << 5
 FILE_G = FILE_F << 6
 FILE_H = FILE_G << 7
 
+SQUARES = [1 << square for square in range(64)]
+
 # Print a bitboard
 def show_bitboard(bitboard):
     print("  +-----------------+")
@@ -40,7 +42,7 @@ def show_bitboard(bitboard):
         print(f"{row + 1} |", end=" ")
         for col in range(8):
             square = row * 8 + col
-            if (bitboard >> square) & 1:
+            if bitboard & SQUARES[square]:
                 print(1, end=" ")
             else:
                 print(".", end=" ")
@@ -53,19 +55,18 @@ def show_bitboard(bitboard):
 
 # Set a piece on the board
 def set_piece(bitboard, square):
-    return bitboard | (1 << square)
+    return bitboard | SQUARES[square]
 
 # Clear the piece from the board if it is occupied
 def clear_piece(bitboard, square):
-    return bitboard & ~(1 << square)
-
+    return bitboard & ~SQUARES[square]
 # Toggle a piece
 def toggle_piece(bitboard, square):
-    return bitboard ^ (1 << square)
+    return bitboard ^ SQUARES[square]
 
 # Check if square is occupied
 def is_occupied(bitboard, square):
-    return (bitboard >> square) & 1
+    return bitboard & SQUARES[square]
 
 # Function to get all occupied squares
 def occupied_squares():
@@ -169,7 +170,3 @@ def east(bitboard):
 
 def west(bitboard):
     return (bitboard >> 1) & ~FILE_H
-
-bitboard = WHITE_PAWNS
-show_bitboard(bitboard)
-print(popcount(bitboard))
