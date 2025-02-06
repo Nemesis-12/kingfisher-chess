@@ -181,7 +181,7 @@ def south_east(bb):
     return (bb >> 7) & ~FILE_A
 
 def north_west(bb):
-    return (bb << 7) & ~FILE_H
+    return ((bb & ~FILE_A) << 7) & ~FILE_H
 
 def south_west(bb):
     return (bb >> 9) & ~FILE_H
