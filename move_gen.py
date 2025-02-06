@@ -27,16 +27,16 @@ def generate_pawn_attacks(player, bb):
         
     # Check white pawn attacks
     if player == 0:
-        attacks[0] = bitboard.north_west(bb) | bitboard.north_east(bb)
+        attacks[0] = bitboard.north_east(bb) | bitboard.north_west(bb)
 
     # Check black pawn attacks
-    else:
-        attacks[1] = bitboard.south_east(bb) | bitboard.south_west(bb)
+    elif player == 1:
+        attacks[1] = bitboard.south_west(bb) | bitboard.south_east(bb)
 
     return attacks
 
 # Initialize attack tables
-def init_attack_pawn_table():
+def init_attack_table_pawn():
     attacks = [[0 for _ in range(64)] for _ in range(2)]
 
     for sq in range(64):
