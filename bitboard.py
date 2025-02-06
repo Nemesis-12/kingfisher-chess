@@ -38,6 +38,9 @@ FILE_F = FILE_E << 5
 FILE_G = FILE_F << 6
 FILE_H = FILE_G << 7
 
+NOT_HG_FILE = ~FILE_H & ~FILE_G
+NOT_AB_FILE = ~FILE_A & ~FILE_B
+
 # Generate pre-computed squares
 SQUARES = [1 << square for square in range(64)]
 
@@ -172,16 +175,16 @@ def south(bitboard):
     return bitboard >> 8
 
 def north_east(bitboard):
-    return (bitboard << 9) & ~FILE_A
+    return (bitboard << 9) & ~FILE_H
 
 def south_east(bitboard):
-    return (bitboard >> 7) & ~FILE_A
+    return (bitboard >> 7) & ~FILE_H
 
 def north_west(bitboard):
-    return (bitboard << 7) & ~FILE_H
+    return (bitboard << 7) & ~FILE_A
 
 def south_west(bitboard):
-    return (bitboard >> 9) & ~FILE_H
+    return (bitboard >> 9) & ~FILE_A
 
 def east(bitboard):
     return (bitboard << 1) & ~FILE_A
