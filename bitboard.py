@@ -32,7 +32,24 @@ FILE_F = FILE_E << 5
 FILE_G = FILE_F << 6
 FILE_H = FILE_G << 7
 
+# Generate pre-computed squares
 SQUARES = [1 << square for square in range(64)]
+
+# Define actions that a player can take
+class Move():
+    def __init__(self, square=None, is_resign=False):
+        assert (square is not None) ^ is_resign
+        self.square = square
+        self.play = self.square is not None
+        self.is_resign = is_resign
+
+    @classmethod
+    def play(cls, square):
+        return Move(square=square)
+    
+    @classmethod
+    def is_resign(cls):
+        return Move(is_resign=True)
 
 # Print a bitboard
 def show_bitboard(bitboard):
