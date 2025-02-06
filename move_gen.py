@@ -22,18 +22,26 @@ def double_push_pawn(player):
         return (single_push >> 8) & ~occupied & bitboard.RANK_5
     
 # Generate an attack table for pawn attacks
-def pawn_attacks():
-    attacks = [[0] * 64 for _ in range(2)]
-
-    for square in range(64):
-        sq = bitboard.SQUARES[square]
+def generate_pawn_attacks(player, bb):
+    attacks = [0, 0]
         
-        # Check white pawn attacks
-        attacks[0][square] = (bitboard.north_east(sq) | bitboard.north_west(sq)) \
-                             & ~bitboard.RANK_8
+    # Check white pawn attacks
+    if player == 0:
+        attacks[0] = bitboard.north_west(bb) | bitboard.north_east(bb)
 
-        # Check black pawn attacks
-        attacks[1][square] = (bitboard.south_east(sq) | bitboard.south_west(sq)) \
-                             & ~bitboard.RANK_1
+    # Check black pawn attacks
+    else:
+        attacks[1] = bitboard.south_east(bb) | bitboard.south_west(bb)
+
+    return attacks
+
+# Initialize attack tables
+def init_attack_pawn_table():
+    attacks = [[0 for _ in range(64)] for _ in range(2)]
+
+    for sq in range(64):
+        square = bitboard.SQUARES[sq]
+        attacks[0][sq] = generate_pawn_attacks(0, square)[0]
+        attacks[1][sq] = generate_pawn_attacks(1, square)[1]
 
     return attacks
