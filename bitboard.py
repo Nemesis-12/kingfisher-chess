@@ -13,6 +13,12 @@ BLACK_ROOKS   = (1 << 56) | (1 << 63)
 BLACK_QUEEN   = (1 << 59)
 BLACK_KING    = (1 << 60)
 
+WHITE_PIECES = WHITE_PAWNS | WHITE_BISHOPS | WHITE_KING | \
+               WHITE_KNIGHTS | WHITE_QUEEN | WHITE_ROOKS
+
+BLACK_PIECES = BLACK_PAWNS | BLACK_BISHOPS | BLACK_KING | \
+               BLACK_KNIGHTS | BLACK_QUEEN | BLACK_ROOKS
+
 # Define rank and files for chessboard
 RANK_1 = 0x00000000000000FF
 RANK_2 = RANK_1 << 8
@@ -87,12 +93,7 @@ def is_occupied(bitboard, square):
 
 # Function to get all occupied squares
 def occupied_squares():
-    return (WHITE_PAWNS | BLACK_PAWNS |
-            WHITE_KNIGHTS | BLACK_KNIGHTS |
-            WHITE_BISHOPS | BLACK_BISHOPS |
-            WHITE_ROOKS | BLACK_ROOKS |
-            WHITE_QUEEN | BLACK_QUEEN |
-            WHITE_KING | BLACK_KING)
+    return (WHITE_PIECES | BLACK_PIECES)
 
 # Find LSB in a bitboard
 def get_LSB(bitboard):
