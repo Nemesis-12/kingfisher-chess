@@ -175,16 +175,16 @@ def south(bitboard):
     return bitboard >> 8
 
 def north_east(bitboard):
-    return (bitboard << 9) & ~FILE_H
+    return (bitboard << 9) & ~FILE_A
 
 def south_east(bitboard):
-    return (bitboard >> 7) & ~FILE_H
+    return (bitboard >> 7) & ~FILE_A
 
 def north_west(bitboard):
-    return (bitboard << 7) & ~FILE_A
+    return (bitboard << 7) & ~FILE_H
 
 def south_west(bitboard):
-    return (bitboard >> 9) & ~FILE_A
+    return (bitboard >> 9) & ~FILE_H
 
 def east(bitboard):
     return (bitboard << 1) & ~FILE_A
