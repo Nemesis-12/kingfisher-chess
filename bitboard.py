@@ -61,14 +61,14 @@ class Move():
         return Move(is_resign=True)
 
 # Print a bitboard
-def show_bitboard(bitboard):
+def show_bitboard(bb):
     print("  +-----------------+")
 
     for row in range(7, -1, -1):
         print(f"{row + 1} |", end=" ")
         for col in range(8):
             square = row * 8 + col
-            if bitboard & SQUARES[square]:
+            if bb & SQUARES[square]:
                 print(1, end=" ")
             else:
                 print(".", end=" ")
@@ -80,114 +80,114 @@ def show_bitboard(bitboard):
     print()
 
 # Set a piece on the board
-def set_piece(bitboard, square):
-    return bitboard | SQUARES[square]
+def set_piece(bb, square):
+    return bb | SQUARES[square]
 
 # Clear the piece from the board if it is occupied
-def clear_piece(bitboard, square):
-    return bitboard & ~SQUARES[square]
+def clear_piece(bb, square):
+    return bb & ~SQUARES[square]
 # Toggle a piece
-def toggle_piece(bitboard, square):
-    return bitboard ^ SQUARES[square]
+def toggle_piece(bb, square):
+    return bb ^ SQUARES[square]
 
 # Check if square is occupied
-def is_occupied(bitboard, square):
-    return bitboard & SQUARES[square]
+def is_occupied(bb, square):
+    return bb & SQUARES[square]
 
 # Function to get all occupied squares
 def occupied_squares():
     return (WHITE_PIECES | BLACK_PIECES)
 
 # Find LSB in a bitboard
-def get_LSB(bitboard):
-    if bitboard == 0:
+def get_LSB(bb):
+    if bb == 0:
         return -1
-    return (bitboard & -bitboard).bit_length() - 1
+    return (bb & -bb).bit_length() - 1
 
 # Find MSB in a bitboard
-def get_MSB(bitboard):
-    if bitboard == 0:
+def get_MSB(bb):
+    if bb == 0:
         return -1
-    return bitboard.bit_length() - 1
+    return bb.bit_length() - 1
 
 # Define population count (check no of pieces)
-def popcount(bitboard):
-    return bin(bitboard).count("1")
+def popcount(bb):
+    return bin(bb).count("1")
 
 # Flip board vertically
-def flip_vertical(bitboard):
+def flip_vertical(bb):
     k1 = 0x00FF00FF00FF00FF
     k2 = 0x0000FFFF0000FFFF
 
-    bitboard = ((bitboard >>  8) & k1) | ((bitboard & k1) <<  8)
-    bitboard = ((bitboard >> 16) & k2) | ((bitboard & k2) << 16)
-    bitboard = (bitboard >> 32) | (bitboard << 32)
+    bb = ((bb >>  8) & k1) | ((bb & k1) <<  8)
+    bb = ((bb >> 16) & k2) | ((bb & k2) << 16)
+    bb = (bb >> 32) | (bb << 32)
 
-    return bitboard
+    return bb
 
 # Mirror board horizontally
-def mirror_horizontal(bitboard):
+def mirror_horizontal(bb):
     k1 = 0x5555555555555555
     k2 = 0x3333333333333333
     k4 = 0x0F0F0F0F0F0F0F0F
 
-    bitboard = ((bitboard >> 1) & k1) | ((bitboard & k1) << 1)
-    bitboard = ((bitboard >> 2) & k2) | ((bitboard & k2) << 2)
-    bitboard = ((bitboard >> 4) & k4) | ((bitboard & k4) << 4)
+    bb = ((bb >> 1) & k1) | ((bb & k1) << 1)
+    bb = ((bb >> 2) & k2) | ((bb & k2) << 2)
+    bb = ((bb >> 4) & k4) | ((bb & k4) << 4)
 
-    return bitboard
+    return bb
 
 # Flip board along A1-H8 diagonal
-def flip_diagonal(bitboard):
+def flip_diagonal(bb):
     k1 = 0x5500550055005500
     k2 = 0x3333000033330000
     k4 = 0x0f0f0f0f00000000
 
-    t = k4 & (bitboard ^ (bitboard << 28))
-    bitboard ^= t ^ (t >> 28)
-    t = k2 & (bitboard ^ (bitboard << 14))
-    bitboard ^= t ^ (t >> 14)
-    t = k1 & (bitboard ^ (bitboard << 7))
-    bitboard ^= t ^ (t >> 7)
+    t = k4 & (bb ^ (bb << 28))
+    bb ^= t ^ (t >> 28)
+    t = k2 & (bb ^ (bb << 14))
+    bb ^= t ^ (t >> 14)
+    t = k1 & (bb ^ (bb << 7))
+    bb ^= t ^ (t >> 7)
 
-    return bitboard
+    return bb
 
 # Flip board along A8-H1 diagonal
-def flip_anti_diagonal(bitboard):
+def flip_anti_diagonal(bb):
     k1 = 0xaa00aa00aa00aa00
     k2 = 0xcccc0000cccc0000
     k4 = 0xf0f0f0f00f0f0f0f
 
-    t = bitboard ^ (bitboard << 36)
-    bitboard ^= k4 & (t ^ (bitboard >> 36))
-    t = k2 & (bitboard ^ (bitboard << 18))
-    bitboard ^= t ^ (t >> 18)
-    t = k1 & (bitboard ^ (bitboard << 9))
-    bitboard ^= t ^ (t >> 9)
+    t = bb ^ (bb << 36)
+    bb ^= k4 & (t ^ (bb >> 36))
+    t = k2 & (bb ^ (bb << 18))
+    bb ^= t ^ (t >> 18)
+    t = k1 & (bb ^ (bb << 9))
+    bb ^= t ^ (t >> 9)
 
-    return bitboard
+    return bb
 
 # Functions for moving one step in any direction
-def north(bitboard):
-    return bitboard << 8
+def north(bb):
+    return bb << 8
 
-def south(bitboard):
-    return bitboard >> 8
+def south(bb):
+    return bb >> 8
 
-def north_east(bitboard):
-    return (bitboard << 9) & ~FILE_A
+def north_east(bb):
+    return (bb << 9) & ~FILE_A
 
-def south_east(bitboard):
-    return (bitboard >> 7) & ~FILE_A
+def south_east(bb):
+    return (bb >> 7) & ~FILE_A
 
-def north_west(bitboard):
-    return (bitboard << 7) & ~FILE_H
+def north_west(bb):
+    return (bb << 7) & ~FILE_H
 
-def south_west(bitboard):
-    return (bitboard >> 9) & ~FILE_H
+def south_west(bb):
+    return (bb >> 9) & ~FILE_H
 
-def east(bitboard):
-    return (bitboard << 1) & ~FILE_A
+def east(bb):
+    return (bb << 1) & ~FILE_A
 
-def west(bitboard):
-    return (bitboard >> 1) & ~FILE_H
+def west(bb):
+    return (bb >> 1) & ~FILE_H
