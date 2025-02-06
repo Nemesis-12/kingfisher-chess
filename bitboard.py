@@ -31,13 +31,15 @@ RANK_8 = RANK_7 << 8
 
 FILE_A = 0x0101010101010101
 FILE_B = FILE_A << 1
-FILE_C = FILE_B << 2
-FILE_D = FILE_C << 3
-FILE_E = FILE_D << 4
-FILE_F = FILE_E << 5
-FILE_G = FILE_F << 6
-FILE_H = FILE_G << 7
+FILE_C = FILE_B << 1
+FILE_D = FILE_C << 1
+FILE_E = FILE_D << 1
+FILE_F = FILE_E << 1
+FILE_G = FILE_F << 1
+FILE_H = FILE_G << 1
 
+NOT_H_FILE = ~FILE_H
+NOT_A_FILE = ~FILE_A
 NOT_HG_FILE = ~FILE_H & ~FILE_G
 NOT_AB_FILE = ~FILE_A & ~FILE_B
 
@@ -175,19 +177,19 @@ def south(bb):
     return bb >> 8
 
 def north_east(bb):
-    return (bb << 9) & ~FILE_A
+    return (bb << 9) & NOT_A_FILE
 
 def south_east(bb):
-    return (bb >> 7) & ~FILE_A
+    return (bb >> 7) & NOT_A_FILE
 
 def north_west(bb):
-    return ((bb & ~FILE_A) << 7) & ~FILE_H
+    return (bb << 7) & NOT_H_FILE
 
 def south_west(bb):
-    return (bb >> 9) & ~FILE_H
+    return (bb >> 9) & NOT_H_FILE
 
 def east(bb):
-    return (bb << 1) & ~FILE_A
+    return (bb << 1) & NOT_A_FILE
 
 def west(bb):
-    return (bb >> 1) & ~FILE_H
+    return (bb >> 1) & NOT_H_FILE
