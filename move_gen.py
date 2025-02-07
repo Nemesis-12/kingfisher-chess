@@ -58,3 +58,16 @@ def generate_knight_attacks():
                       bitboard.south_ee(square) | bitboard.south_ww(square)
 
     return attacks
+
+# Generate an attack table for king attacks
+def generate_king_attacks():
+    attacks = [0] * 64
+
+    for sq in range(64):
+        square = bitboard.SQUARES[sq]
+        attacks[sq] = bitboard.north(square) | bitboard.south(square) | \
+                      bitboard.east(square) | bitboard.west(square) | \
+                      bitboard.north_east(square) | bitboard.north_west(square) | \
+                      bitboard.south_east(square) | bitboard.south_west(square)
+        
+    return attacks
