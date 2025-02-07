@@ -38,10 +38,10 @@ FILE_F = FILE_E << 1
 FILE_G = FILE_F << 1
 FILE_H = FILE_G << 1
 
-NOT_H_FILE = ~FILE_H
 NOT_A_FILE = ~FILE_A
-NOT_HG_FILE = ~FILE_H & ~FILE_G
+NOT_H_FILE = ~FILE_H
 NOT_AB_FILE = ~FILE_A & ~FILE_B
+NOT_HG_FILE = ~FILE_H & ~FILE_G
 
 # Generate pre-computed squares
 SQUARES = [1 << square for square in range(64)]
@@ -169,27 +169,51 @@ def flip_anti_diagonal(bb):
 
     return bb
 
-# Functions for moving one step in any direction
+# Define directions for pieces
 def north(bb):
     return bb << 8
 
 def south(bb):
     return bb >> 8
 
-def north_east(bb):
-    return (bb << 9) & NOT_A_FILE
-
-def south_east(bb):
-    return (bb >> 7) & NOT_A_FILE
-
-def north_west(bb):
-    return (bb << 7) & NOT_H_FILE
-
-def south_west(bb):
-    return (bb >> 9) & NOT_H_FILE
-
 def east(bb):
     return (bb << 1) & NOT_A_FILE
 
 def west(bb):
     return (bb >> 1) & NOT_H_FILE
+
+def north_east(bb):
+    return (bb << 9) & NOT_A_FILE
+
+def north_west(bb):
+    return (bb << 7) & NOT_H_FILE
+
+def south_east(bb):
+    return (bb >> 7) & NOT_A_FILE
+
+def south_west(bb):
+    return (bb >> 9) & NOT_H_FILE
+
+def north_ne(bb):
+    return (bb << 17) & NOT_A_FILE
+
+def north_ee(bb):
+    return (bb << 10) & NOT_AB_FILE
+
+def north_nw(bb):
+    return (bb << 15) & NOT_H_FILE
+
+def north_ww(bb):
+    return (bb << 6) & NOT_HG_FILE
+
+def south_ee(bb):
+    return (bb >> 6) & NOT_AB_FILE
+
+def south_se(bb):
+    return (bb >> 15) & NOT_A_FILE
+
+def south_ww(bb):
+    return (bb >> 10) & NOT_HG_FILE
+
+def south_sw(bb):
+    return (bb >> 17) & NOT_H_FILE
