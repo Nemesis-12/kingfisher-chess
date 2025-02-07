@@ -45,3 +45,16 @@ def init_attack_table_pawn():
         attacks[1][sq] = generate_pawn_attacks(1, square)[1]
 
     return attacks
+
+# Generate an attack table for knight attacks
+def generate_knight_attacks():
+    attacks = [0] * 64
+    
+    for sq in range(64):
+        square = bitboard.SQUARES[sq]
+        attacks[sq] = bitboard.north_ne(square) | bitboard.north_nw(square) | \
+                      bitboard.north_ee(square) | bitboard.north_ww(square) | \
+                      bitboard.south_se(square) | bitboard.south_sw(square) | \
+                      bitboard.south_ee(square) | bitboard.south_ww(square)
+
+    return attacks
