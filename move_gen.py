@@ -125,3 +125,12 @@ def init_rook_mask():
         mask[sq] = generate_rook_mask(sq)
 
     return mask
+
+# Generate queen masks
+def init_queen_mask():
+    mask = [0] * 64
+
+    for sq in range(64):
+        mask[sq] = generate_rook_mask(sq) | generate_bishop_mask(sq)
+
+    return mask
