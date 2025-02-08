@@ -98,3 +98,30 @@ def init_bishop_mask():
         mask[sq] = generate_bishop_mask(sq)
 
     return mask
+
+# Generate rook masks
+def generate_rook_mask(square):
+    mask = 0
+    file_mask = square % 8
+    rank_mask = square // 8
+
+    for i in range(1, 7):
+        if rank_mask + i <= 6:
+            mask |= bitboard.SQUARES[(rank_mask + i) * 8 + file_mask]
+        if rank_mask - i >= 1:
+            mask |= bitboard.SQUARES[(rank_mask - i) * 8 + file_mask]
+        if file_mask - i >= 1:
+            mask |= bitboard.SQUARES[rank_mask * 8 + (file_mask - i)]
+        if file_mask + i <= 6: 
+            mask |= bitboard.SQUARES[rank_mask * 8 + (file_mask + i)]
+
+    return mask
+
+# Initialize rook mask table
+def init_rook_mask():
+    mask = [0] * 64
+
+    for sq in range(64):
+        mask[sq] = generate_rook_mask(sq)
+
+    return mask
