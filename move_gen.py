@@ -71,3 +71,30 @@ def generate_king_attacks():
                       bitboard.south_east(square) | bitboard.south_west(square)
         
     return attacks
+
+# Generate bishop masks
+def generate_bishop_mask(square):
+    mask = 0
+    file_mask = square % 8
+    rank_mask = square // 8
+
+    for i in range(1, 7):
+        if (rank_mask + i <= 6) & (file_mask + i <= 6):
+            mask |= bitboard.SQUARES[(rank_mask + i) * 8 + (file_mask + i)]
+        if rank_mask - i >= 1 and file_mask - i >= 1:
+            mask |= bitboard.SQUARES[(rank_mask - i) * 8 + (file_mask - i)]
+        if rank_mask + i <= 6 and file_mask - i >= 1:
+            mask |= bitboard.SQUARES[(rank_mask + i) * 8 + (file_mask - i)]
+        if rank_mask - i >= 1 and file_mask + i <= 6: 
+            mask |= bitboard.SQUARES[(rank_mask - i) * 8 + (file_mask + i)]
+
+    return mask
+
+# Initialize bishop mask table
+def init_bishop_mask():
+    mask = [0] * 64
+
+    for sq in range(64):
+        mask[sq] = generate_bishop_mask(sq)
+
+    return mask
