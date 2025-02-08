@@ -73,7 +73,7 @@ def generate_king_attacks():
     return attacks
 
 # Generate bishop masks
-def generate_bishop_mask(square):
+def generate_bishop_mask(square, blockers):
     mask = 0
     directions = [bitboard.north_east, bitboard.north_west, bitboard.south_east, bitboard.south_west]
 
@@ -81,23 +81,16 @@ def generate_bishop_mask(square):
         bb = bitboard.SQUARES[square]
         for _ in range(7):
             bb = direction(bb)
-            if bb == 0:
+            if (bb & blockers):
                 break
             mask |= bb
-
-    return mask
-
-# Initialize bishop mask table
-def init_bishop_mask():
-    mask = [0] * 64
-
-    for sq in range(64):
-        mask[sq] = generate_bishop_mask(sq)
+            if bb == 0:
+                break
 
     return mask
 
 # Generate rook masks
-def generate_rook_mask(square):
+def generate_rook_mask(square, blockers):
     mask = 0
     directions = [bitboard.north, bitboard.west, bitboard.south, bitboard.east]
 
@@ -105,26 +98,14 @@ def generate_rook_mask(square):
         bb = bitboard.SQUARES[square]
         for _ in range(7):
             bb = direction(bb)
-            if bb == 0:
+            if (bb & blockers):
                 break
             mask |= bb
-
-    return mask
-
-# Initialize rook mask table
-def init_rook_mask():
-    mask = [0] * 64
-
-    for sq in range(64):
-        mask[sq] = generate_rook_mask(sq)
+            if bb == 0:
+                break
 
     return mask
 
 # Generate queen masks
-def init_queen_mask():
-    mask = [0] * 64
-
-    for sq in range(64):
-        mask[sq] = generate_rook_mask(sq) | generate_bishop_mask(sq)
-
-    return mask
+def init_queen_mask(square, blockers):
+    return generate_bishop_mask(square, blockers) | generate_rook_mask(square, blockers)
