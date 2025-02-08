@@ -75,18 +75,15 @@ def generate_king_attacks():
 # Generate bishop masks
 def generate_bishop_mask(square):
     mask = 0
-    file_mask = square % 8
-    rank_mask = square // 8
+    directions = [bitboard.north_east, bitboard.north_west, bitboard.south_east, bitboard.south_west]
 
-    for i in range(1, 7):
-        if (rank_mask + i <= 6) & (file_mask + i <= 6):
-            mask |= bitboard.SQUARES[(rank_mask + i) * 8 + (file_mask + i)]
-        if rank_mask - i >= 1 and file_mask - i >= 1:
-            mask |= bitboard.SQUARES[(rank_mask - i) * 8 + (file_mask - i)]
-        if rank_mask + i <= 6 and file_mask - i >= 1:
-            mask |= bitboard.SQUARES[(rank_mask + i) * 8 + (file_mask - i)]
-        if rank_mask - i >= 1 and file_mask + i <= 6: 
-            mask |= bitboard.SQUARES[(rank_mask - i) * 8 + (file_mask + i)]
+    for direction in directions:
+        bb = bitboard.SQUARES[square]
+        for _ in range(7):
+            bb = direction(bb)
+            if bb == 0:
+                break
+            mask |= bb
 
     return mask
 
@@ -102,18 +99,15 @@ def init_bishop_mask():
 # Generate rook masks
 def generate_rook_mask(square):
     mask = 0
-    file_mask = square % 8
-    rank_mask = square // 8
+    directions = [bitboard.north, bitboard.west, bitboard.south, bitboard.east]
 
-    for i in range(1, 7):
-        if rank_mask + i <= 6:
-            mask |= bitboard.SQUARES[(rank_mask + i) * 8 + file_mask]
-        if rank_mask - i >= 1:
-            mask |= bitboard.SQUARES[(rank_mask - i) * 8 + file_mask]
-        if file_mask - i >= 1:
-            mask |= bitboard.SQUARES[rank_mask * 8 + (file_mask - i)]
-        if file_mask + i <= 6: 
-            mask |= bitboard.SQUARES[rank_mask * 8 + (file_mask + i)]
+    for direction in directions:
+        bb = bitboard.SQUARES[square]
+        for _ in range(7):
+            bb = direction(bb)
+            if bb == 0:
+                break
+            mask |= bb
 
     return mask
 
