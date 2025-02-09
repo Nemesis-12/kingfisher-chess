@@ -3,6 +3,7 @@
 #include <bitset>
 #include <vector>
 #include <algorithm>
+#include <cstdint>
 
 // Define pieces for white and black
 constexpr uint64_t WHITE_PAWNS   = ((1ULL << 8) - 1) << 8;
@@ -75,7 +76,6 @@ uint64_t coordToBitboard(const std::string& square) {
     return 1ULL << index;
 }
 
-
 // Precomputed squares
 std::vector<uint64_t> initSquares() {
     std::vector<uint64_t> squares(64);
@@ -146,8 +146,6 @@ int getMSB(uint64_t bb) {
 int popcount(uint64_t bb) {
     return __builtin_popcountll(bb);
 }
-
-#include <cstdint>
 
 // Flip board vertically
 uint64_t flip_vertical(uint64_t bb) {
