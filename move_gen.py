@@ -1,4 +1,27 @@
 import bitboard
+import random
+
+bishop_occupancy = [
+    6, 6, 6, 6, 6, 6, 6, 6,
+    6, 5, 5, 5, 5, 5, 5, 6,
+    6, 5, 7, 7, 7, 7, 5, 6,
+    6, 5, 7, 9, 9, 7, 5, 6,
+    6, 5, 7, 9, 9, 7, 5, 6,
+    6, 5, 7, 7, 7, 7, 5, 6,
+    6, 5, 5, 5, 5, 5, 5, 6,
+    6, 6, 6, 6, 6, 6, 6, 6
+]
+
+rook_occupancy = [
+    12, 11, 11, 11, 11, 11, 11, 12,
+    11, 10, 10, 10, 10, 10, 10, 11,
+    11, 10, 10, 10, 10, 10, 10, 11,
+    11, 10, 10, 10, 10, 10, 10, 11,
+    11, 10, 10, 10, 10, 10, 10, 11,
+    11, 10, 10, 10, 10, 10, 10, 11,
+    11, 10, 10, 10, 10, 10, 10, 11,
+    12, 11, 11, 11, 11, 11, 11, 12
+]
 
 # Push a pawn forward by a single square based on player turn
 def single_push_pawn(player):
@@ -73,7 +96,7 @@ def generate_king_attacks():
     return attacks
 
 # Generate bishop masks
-def generate_bishop_mask(square, blockers):
+def generate_bishop_mask(square, blockers=0):
     mask = 0
     directions = [bitboard.north_east, bitboard.north_west, bitboard.south_east, bitboard.south_west]
 
@@ -81,16 +104,16 @@ def generate_bishop_mask(square, blockers):
         bb = bitboard.SQUARES[square]
         for _ in range(7):
             bb = direction(bb)
-            if (bb & blockers):
+            if bb == 0:
                 break
             mask |= bb
-            if bb == 0:
+            if (bb & blockers):
                 break
 
     return mask
 
 # Generate rook masks
-def generate_rook_mask(square, blockers):
+def generate_rook_mask(square, blockers=0):
     mask = 0
     directions = [bitboard.north, bitboard.west, bitboard.south, bitboard.east]
 
@@ -98,14 +121,37 @@ def generate_rook_mask(square, blockers):
         bb = bitboard.SQUARES[square]
         for _ in range(7):
             bb = direction(bb)
-            if (bb & blockers):
+            if bb == 0:
                 break
             mask |= bb
-            if bb == 0:
+            if (bb & blockers):
                 break
 
     return mask
 
 # Generate queen masks
-def init_queen_mask(square, blockers):
+def init_queen_mask(square, blockers=0):
     return generate_bishop_mask(square, blockers) | generate_rook_mask(square, blockers)
+
+# Generate occupancy bits
+def set_occupancy(index, bits, attacks):
+    occupancy = 0
+
+    for i in range(bits):
+        square = bitboard.get_LSB(attacks)
+        attacks = bitboard.clear_piece(attacks, square)
+
+        if index & (1 << i):
+            occupancy |= 1 << square
+
+    return occupancy
+
+# Define pseudo random number generator for magic bitboard
+def xorshift_rng():
+    seed = 0x9E3779B97F4A7C15
+
+    seed ^= seed << 13
+    seed ^= seed >> 7
+    seed ^= seed << 17
+
+    return seed
