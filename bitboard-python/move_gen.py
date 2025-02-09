@@ -114,6 +114,11 @@ def generate_bishop_mask(square, blockers=0):
 
     return mask
 
+def generate_bishop_attacks(occupancy, square):
+    attacks = [[0] * 512 for _ in range(64)]
+
+    return None
+
 # Generate rook masks
 def generate_rook_mask(square, blockers=0):
     mask = 0
