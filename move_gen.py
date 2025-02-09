@@ -23,6 +23,8 @@ rook_occupancy = [
     12, 11, 11, 11, 11, 11, 11, 12
 ]
 
+state = 1538740206
+
 # Push a pawn forward by a single square based on player turn
 def single_push_pawn(player):
     occupied = bitboard.occupied_squares()
@@ -146,12 +148,26 @@ def set_occupancy(index, bits, attacks):
 
     return occupancy
 
-# Define pseudo random number generator for magic bitboard
-def xorshift_rng():
-    seed = 0x9E3779B97F4A7C15
+# Define 32-bit pseudo random number generator
+def xorshift32_rng():
+    global state
 
-    seed ^= seed << 13
-    seed ^= seed >> 7
-    seed ^= seed << 17
+    state ^= state << 13
+    state ^= state >> 7
+    state ^= state << 17
+    state &= 0xFFFF
 
-    return seed
+    return state
+
+# Define 64-bit pseudo random number generator
+def xorshift64_rng():
+    num1 = xorshift32_rng() & 0xFFFF
+    num2 = xorshift32_rng() & 0xFFFF
+    num3 = xorshift32_rng() & 0xFFFF
+    num4 = xorshift32_rng() & 0xFFFF
+
+    return num1 | (num2 << 15) | (num3 << 30) | (num4 << 45)
+
+# Generate magic number
+def get_magic_number():
+    return xorshift64_rng() & xorshift64_rng() & xorshift64_rng()
