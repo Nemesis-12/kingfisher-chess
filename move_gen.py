@@ -23,7 +23,7 @@ rook_occupancy = [
     12, 11, 11, 11, 11, 11, 11, 12
 ]
 
-state = 1538740206
+state = 8930690109404521464
 
 # Push a pawn forward by a single square based on player turn
 def single_push_pawn(player):
@@ -155,7 +155,7 @@ def xorshift32_rng():
     state ^= state << 13
     state ^= state >> 7
     state ^= state << 17
-    state &= 0xFFFF
+    state &= 0xFFFFFFFF
 
     return state
 
@@ -166,8 +166,11 @@ def xorshift64_rng():
     num3 = xorshift32_rng() & 0xFFFF
     num4 = xorshift32_rng() & 0xFFFF
 
-    return num1 | (num2 << 15) | (num3 << 30) | (num4 << 45)
+    return (num1 << 48) | (num2 << 32) | (num3 << 16) | num4
 
 # Generate magic number
 def get_magic_number():
     return xorshift64_rng() & xorshift64_rng() & xorshift64_rng()
+
+bb = get_magic_number()
+bitboard.show_bitboard(bb)
