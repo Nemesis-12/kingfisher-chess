@@ -64,13 +64,12 @@ uint64_t generatePawnAttacks(bool isWhite, uint64_t bb) {
     }
 }
 
-std::vector<std::vector<uint64_t>> initPawnAttackTable() {    
+void initPawnAttackTable() {    
     for (int square = 0; square < 64; ++square) {
         uint64_t bb = SQUARES[square];
         pawnAttackTable[1][square] = generatePawnAttacks(true, bb);
         pawnAttackTable[0][square] = generatePawnAttacks(false, bb);
     }
-    return pawnAttackTable;
 }
 
 // Generate knight attacks
