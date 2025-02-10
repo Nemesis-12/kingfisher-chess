@@ -68,7 +68,7 @@ uint64_t coordToBitboard(const std::string& square) {
 
     // If the square is not found, throw an exception
     if (it == coord.end()) {
-        throw std::invalid_argument("Invalid coordinate: " + square);
+        return 0;
     }
 
     // Calculate the index of the square and return the corresponding bitboard
