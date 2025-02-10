@@ -1,2 +1,2 @@
-# kingfisher-chess
-A chess engine
+# Kingfisher
+Ongoing project
