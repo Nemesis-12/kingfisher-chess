@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <array>
 
 // Bishop and Rook Occupancy Tables
 extern const std::vector<int> bishopOccupancy;
@@ -13,17 +14,27 @@ uint64_t doublePushPawn(bool isWhite, uint64_t occupied);
 
 // Pawn Attack Generation
 uint64_t generatePawnAttacks(bool isWhite, uint64_t bb);
+extern std::vector<std::vector<uint64_t>> pawnAttackTable;
 
 // Knight Attack Generation
-std::vector<uint64_t> generateKnightAttacks();
+std::array<uint64_t, 64> generateKnightAttacks();
+extern std::array<uint64_t, 64> knightAttackTable;
 
 // King Attack Generation
-std::vector<uint64_t> generateKingAttacks();
+std::array<uint64_t, 64> generateKingAttacks();
+extern std::array<uint64_t, 64> kingAttackTable;
 
 // Bishop, Rook, and Queen Mask Generators
 uint64_t generateBishopMask(int square, uint64_t blockers);
 uint64_t generateRookMask(int square, uint64_t blockers);
-uint64_t initQueenMask(int square, uint64_t blockers);
+uint64_t generateQueenMask(int square, uint64_t blockers);
+
+extern std::array<uint64_t, 64> bishopMaskTable;
+extern std::array<uint64_t, 64> rookMaskTable;
+extern std::array<uint64_t, 64> queenMaskTable;
+
+extern void initAttackTables();
+extern void initMaskTables();
 
 // Occupancy Management
 uint64_t setOccupancy(int index, int bits, uint64_t attacks);
