@@ -1,5 +1,6 @@
 import chess
 
+# Create player class for ease
 class Player:
     def __init__(self, board):
         self.player = chess.WHITE if board.turn else chess.BLACK
