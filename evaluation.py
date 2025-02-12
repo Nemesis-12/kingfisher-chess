@@ -25,7 +25,5 @@ def evaluation(board, curr_player):
                 material_count += value
             else:
                 material_count -= value
-        
-    if curr_player.player == chess.BLACK:
-        return -material_count
+
     return material_count
