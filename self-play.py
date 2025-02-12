@@ -10,7 +10,7 @@ def print_move(player, move, board, eval_function):
 
     player_name = "White" if player == chess.WHITE else "Black"
     print(f"{player_name} plays {piece_unicode[str(piece)]} {move.uci()[-2:]}")
-    print(f"Evaluation: {eval_function}")
+    print(f"Evaluation: {eval_function:.2f}")
 
 def print_board(board):
     print("    a   b   c   d   e   f   g   h")
@@ -31,29 +31,28 @@ def print_board(board):
 board = chess.Board()
 
 bots = {
-    chess.WHITE: Kingfisher(),
-    chess.BLACK: Kingfisher()
+    chess.WHITE: Kingfisher(max_depth=3),
+    chess.BLACK: Kingfisher(max_depth=3)
 }
 
 piece_unicode = {
     "r": "♜", "n": "♞", "b": "♝", "q": "♛", "k": "♚", "p": "♟",
-    "R": "♖", "N": "♘", "B": "♗", "Q": "♕", "K": "♔", "P": "♙", None: " . "
+    "R": "♖", "N": "♘", "B": "♗", "Q": "♕", "K": "♔", "P": "♙", "None": " . "
 }
 
 transposition_table = {}
 
 while not board.is_game_over():
-    time.sleep(0.3)
-
     print_board(board)
 
     curr_player = Player(board)
 
     move = bots[curr_player.player].select_move(board)
-    board.push(move)
+
     score = evaluation(board, curr_player)
-    
     print_move(curr_player.player, move, board, score)
+
+    board.push(move)
     print()
 
     zobrist_hash = chess.polyglot.zobrist_hash(board)
