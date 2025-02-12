@@ -25,5 +25,7 @@ def best_move(board, curr_player, max_depth, eval_function):
 
         if curr_state > best_result:
             best_result = curr_state
+
+        board.pop()
     
     return best_result
