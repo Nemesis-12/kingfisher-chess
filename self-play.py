@@ -1,10 +1,10 @@
 import chess
 from kingfisher import Kingfisher
-import time
 import chess.polyglot
 from player import Player
 from evaluation import evaluation
 
+# Print the move played and the side
 def print_move(player, move, board, eval_function):
     piece = board.piece_at(move.from_square)
 
@@ -12,6 +12,7 @@ def print_move(player, move, board, eval_function):
     print(f"{player_name} plays {piece_unicode[str(piece)]} {move.uci()[-2:]}")
     print(f"Evaluation: {eval_function:.2f}")
 
+# Print chess board
 def print_board(board):
     print("    a   b   c   d   e   f   g   h")
     print("  +" + "---+" * 8)
@@ -28,6 +29,7 @@ def print_board(board):
 
     print("    a   b   c   d   e   f   g   h")
 
+# Define variables
 board = chess.Board()
 
 bots = {
@@ -42,6 +44,7 @@ piece_unicode = {
 
 transposition_table = {}
 
+# Play the game until it is over
 while not board.is_game_over():
     print_board(board)
 
@@ -55,6 +58,7 @@ while not board.is_game_over():
     board.push(move)
     print()
 
+    # Use zobrist hash to save board state
     zobrist_hash = chess.polyglot.zobrist_hash(board)
     if zobrist_hash not in transposition_table:
         transposition_table[zobrist_hash] = {
@@ -63,8 +67,10 @@ while not board.is_game_over():
     else:
         transposition_table[zobrist_hash]["position_count"] += 1
 
+# Print board after game ends
 print_board(board)
 
+# Display outcome of the game
 if board.is_checkmate():
     print(f"Checkmate! {curr_player.player_name} wins!")
 elif board.is_stalemate():
