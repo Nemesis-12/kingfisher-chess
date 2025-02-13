@@ -1,31 +1,29 @@
 from player import Player
 
 # Calculate the best move for current player and opponent
-def best_move(board, curr_player, max_depth, eval_function):
-    outcome = board.outcome()
-
-    # Calculate if game is over
-    if board.is_game_over():
-        if outcome.winner == curr_player.player:
-            return float('inf')
-        elif outcome.winner is None:
-            return 0
-        else:
-            return float('-inf')
-        
-    if max_depth == 0:
+def negamax_search(board, curr_player, max_depth, eval_function, alpha=float('-inf'), beta=float('inf')):        
+    # Evaluate the position until you reach depth or game is over
+    if max_depth == 0 or board.is_game_over():
         return eval_function(board, curr_player)
     
     # Calculate the best move from all possible moves
-    best_result = float('-inf')
+    curr_eval = float('-inf')
     for move in board.legal_moves:
         board.push(move)
-        opp_state = best_move(board, Player(board), max_depth - 1, eval_function)
-        curr_state = -opp_state
-
-        if curr_state > best_result:
-            best_result = curr_state
+        
+        # Search using negamax algorithm
+        score = -negamax_search(board, Player(board), max_depth - 1, 
+                                eval_function, -beta, -alpha
+                                )
 
         board.pop()
-    
-    return best_result
+
+        # Check if current move is better than the searched move
+        curr_eval = max(curr_eval, score)
+        alpha = max(alpha, score)
+
+        # If you already have best result, prune the search
+        if alpha >= beta:
+            break
+
+    return curr_eval
