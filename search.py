@@ -5,7 +5,7 @@ def negamax_search(board, curr_player, max_depth, eval_function, alpha=float('-i
     # Evaluate the position until you reach depth or game is over
     if max_depth == 0 or board.is_game_over():
         return eval_function(board, curr_player)
-    
+
     # Calculate the best move from all possible moves
     curr_eval = float('-inf')
     for move in board.legal_moves:
