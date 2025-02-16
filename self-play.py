@@ -2,15 +2,15 @@ import chess
 from kingfisher import Kingfisher
 import chess.polyglot
 from player import Player
-from evaluation import evaluation
+import chess.pgn
+from export_pgn import export_pgn
 
 # Print the move played and the side
-def print_move(player, move, board, eval_function):
+def print_move(player, move, board):
     piece = board.piece_at(move.from_square)
 
     player_name = "White" if player == chess.WHITE else "Black"
     print(f"{player_name} plays {piece_unicode[str(piece)]} {move.uci()[-2:]}")
-    print(f"Evaluation: {eval_function:.2f}")
 
 # Print chess board
 def print_board(board):
@@ -28,13 +28,16 @@ def print_board(board):
         print("  +" + "---+" * 8)
 
     print("    a   b   c   d   e   f   g   h")
+    print()
 
 # Define variables
 board = chess.Board()
+game = chess.pgn.Game()
+node = game
 
 bots = {
-    chess.WHITE: Kingfisher(max_depth=3),
-    chess.BLACK: Kingfisher(max_depth=3)
+    chess.WHITE: Kingfisher(),
+    chess.BLACK: Kingfisher()
 }
 
 piece_unicode = {
@@ -45,18 +48,18 @@ piece_unicode = {
 transposition_table = {}
 
 # Play the game until it is over
+print_board(board)
 while not board.is_game_over():
-    print_board(board)
-
     curr_player = Player(board)
 
     move = bots[curr_player.player].select_move(board)
-
-    score = evaluation(board, curr_player)
-    print_move(curr_player.player, move, board, score)
+    print_move(curr_player.player, move, board)
 
     board.push(move)
+    print_board(board)
     print()
+
+    node = node.add_variation(move)
 
     # Use zobrist hash to save board state
     zobrist_hash = chess.polyglot.zobrist_hash(board)
@@ -69,6 +72,7 @@ while not board.is_game_over():
 
 # Print board after game ends
 print_board(board)
+export_pgn(game)
 
 # Display outcome of the game
 if board.is_checkmate():
