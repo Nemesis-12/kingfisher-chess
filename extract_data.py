@@ -18,6 +18,7 @@ class DataExtractor:
     
     def extract_pgn(self, no_of_games=None, batch_size=100000):
         games_processed = 0
+        board_positions = 0
         fen_chunk = []
         move_chunk = []
         pgn = open(self.file)
@@ -34,14 +35,16 @@ class DataExtractor:
                 for fens, moves in results:
                     fen_chunk.extend(fens)
                     move_chunk.extend(moves)
+                    board_positions += len(fen_chunk)
 
                 games_processed += len(games)
 
-                if len(fen_chunk) >= batch_size:
+                if board_positions >= batch_size:
                     np.savez_compressed(f"fen_{games_processed}.npz", fens=fen_chunk, moves=move_chunk)
 
                     fen_chunk.clear()
                     move_chunk.clear()
+                    board_positions = 0
 
                 print(f"Processed {games_processed} games...")
 
