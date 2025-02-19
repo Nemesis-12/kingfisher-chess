@@ -64,7 +64,8 @@ class DataExtractor:
 
         print("Completed extraction")
 
-file = " "
-load_data = DataExtractor(file)
+if __name__ == "__main__":
+    file = ""
+    load_data = DataExtractor(file)
 
-load_data.extract_pgn()
+    load_data.extract_pgn()
