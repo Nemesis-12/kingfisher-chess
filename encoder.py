@@ -23,7 +23,7 @@ class Encoder:
                 encoded_piece = encoded_pieces[piece.piece_type]
                 row = chess.square_rank(square)
                 col = chess.square_file(square)
-                encoded_board[encoded_piece, row, col] = 1.0 if chess.WHITE else -1.0
+                encoded_board[encoded_piece, row, col] = 1.0 if piece.color == chess.WHITE else -1.0
 
         return encoded_board
     
