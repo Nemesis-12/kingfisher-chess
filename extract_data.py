@@ -1,43 +1,70 @@
 import chess.pgn
-import numpy as np
 import pandas as pd
 from encoder import Encoder
+import multiprocessing as mp
 
 class DataExtractor:
     def __init__(self, file):
         self.file = file
-    
-    def extract_pgn(self, no_of_games=None):
+        self.encoder = Encoder()
+
+    def process_game(self, game):
         features = []
         labels = []
-        encoded_board = Encoder()
+        board = game.board()
+        for move in game.mainline_moves():
+            features.append(self.encoder.encode(board).flatten())
+            labels.append(move.uci())
+            board.push(move)
 
-        with open(self.file) as pgn:
-            games_processed = 0
+        return features, labels
+    
+    def extract_pgn(self, no_of_games=None, batch_size=100000):
+        games_processed = 0
+        chunk_features = []
+        chunk_labels = []
+        pgn = open(self.file)
 
+        with mp.Pool(mp.cpu_count()) as pool:
             while True:
-                game = chess.pgn.read_game(pgn)
+                games = [chess.pgn.read_game(pgn) for _ in range(mp.cpu_count())]
                 
-                if game is None:
+                if not games:
                     break
 
-                board = game.board()
-                for move in game.mainline_moves():
-                    features.append(encoded_board.encode(board))
-                    labels.append(move.uci())
-                    board.push(move)
+                results = pool.map(self.process_game, games)
 
-                games_processed += 1
+                for features, labels in results:
+                    chunk_features.extend(features)
+                    chunk_labels.extend(labels)
+
+                games_processed += len(games)
+
+                if len(chunk_features) >= batch_size:
+                    feature_df = pd.DataFrame(chunk_features)
+                    label_df = pd.DataFrame(chunk_labels, columns=["Moves"])
+
+                    feature_df.to_csv("features.csv", mode="a", index=False)
+                    label_df.to_csv("labels.csv", mode="a", index=False)
+
+                    chunk_features.clear()
+                    chunk_labels.clear()
+
+                print(f"Processed {games_processed} games...")
+
                 if no_of_games is not None and games_processed >= no_of_games:
-                    break           
+                    break
 
-        feature_data = np.array(features).reshape(len(features), -1)
-        label_data = np.array(labels).reshape(-1, 1)
+        if chunk_features:
+            feature_df = pd.DataFrame(chunk_features)
+            label_df = pd.DataFrame(chunk_labels, columns=["Moves"])
 
-        feature_df = pd.DataFrame(feature_data)
-        label_df = pd.DataFrame(label_data, columns=["Moves"])
+            feature_df.to_csv("features.csv", mode="a", index=False)
+            label_df.to_csv("labels.csv", mode="a", index=False)
 
-        feature_df.to_csv("features.csv", index=False)
-        label_df.to_csv("labels.csv", index=False)
+        print("Completed extraction")
 
-        print("Created features.csv and labels.csv")
+file = " "
+load_data = DataExtractor(file)
+
+load_data.extract_pgn()
