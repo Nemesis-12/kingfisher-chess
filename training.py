@@ -1,5 +1,4 @@
 import torchmetrics.classification
-from extract_data import DataExtractor
 import torch
 import torch.nn as nn
 import pandas as pd
@@ -9,11 +8,11 @@ from sklearn.preprocessing import LabelEncoder
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import train_test_split
 
-features = pd.read_csv("kingfisher-chess/features.csv")
-features = features.to_numpy().reshape(-1, 6, 8, 8)
+features = pd.read_csv("features.csv").values
+features = features.reshape(-1, 6, 8, 8)
 
-labels = pd.read_csv("kingfisher-chess/labels.csv")
-labels = labels.to_numpy().reshape(-1)
+labels = pd.read_csv("labels.csv").values
+labels = labels.reshape(-1)
 
 label_encoder = LabelEncoder()
 encoded_labels = label_encoder.fit_transform(labels)
